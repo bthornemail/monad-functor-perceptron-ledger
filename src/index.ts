@@ -45,3 +45,4 @@ export * from './utils/Performance.js';
 
 // Type definitions
 export * from './types/index.js';
+[].
