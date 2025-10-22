@@ -1,0 +1,142 @@
+MIT License
+
+Copyright (c) 2024 Geometric Consensus Protocol Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Licenses
+
+This software includes the following third-party components:
+
+### Node.js Dependencies
+
+#### crypto-js (MIT License)
+- Copyright (c) 2009-2013 Jeff Mott
+- Copyright (c) 2013-2017 Evan Vosberg
+- Used for cryptographic operations and hashing
+
+#### TypeScript (Apache License 2.0)
+- Copyright (c) Microsoft Corporation
+- Used for type checking and compilation
+
+#### ESLint (MIT License)
+- Copyright (c) OpenJS Foundation and other contributors
+- Used for code linting and style enforcement
+
+#### Vitest (MIT License)
+- Copyright (c) Anthony Fu
+- Used for testing framework
+
+#### esbuild (MIT License)
+- Copyright (c) Evan Wallace
+- Used for bundling and minification
+
+#### TypeDoc (Apache License 2.0)
+- Copyright (c) TypeDoc Contributors
+- Used for API documentation generation
+
+### Mathematical References
+
+#### Ramanujan's Universal Quadratic Forms
+- Based on work by Srinivasa Ramanujan (1917)
+- "On the expression of numbers in the form ax²+by²+cz²+du²"
+- Public domain mathematical knowledge
+
+#### Hilbert Space Theory
+- Based on work by David Hilbert (1900)
+- "Mathematical Problems - Foundations of Geometry"
+- Public domain mathematical knowledge
+
+#### Fano Plane Structure
+- Based on work by Gino Fano (1892)
+- Finite projective plane of order 2
+- Public domain mathematical knowledge
+
+### Standards and Specifications
+
+#### RFC XXXX - Geometric Consensus Protocol
+- Copyright (c) 2024 IETF Trust and the persons identified as the document authors
+- Used under IETF Trust Legal Provisions
+- Available at: https://tools.ietf.org/html/rfc-xxxx
+
+#### IPv6 Address Format
+- Based on RFC 4291 - IP Version 6 Addressing Architecture
+- Copyright (c) 2006 IETF Trust
+- Used under IETF Trust Legal Provisions
+
+### Docker and Kubernetes
+
+#### Docker (Apache License 2.0)
+- Copyright (c) Docker, Inc.
+- Used for containerization
+
+#### Kubernetes (Apache License 2.0)
+- Copyright (c) The Kubernetes Authors
+- Used for orchestration and deployment
+
+#### Nginx (2-clause BSD License)
+- Copyright (c) Igor Sysoev
+- Used for load balancing and reverse proxy
+
+#### Prometheus (Apache License 2.0)
+- Copyright (c) The Prometheus Authors
+- Used for monitoring and metrics
+
+#### Grafana (Apache License 2.0)
+- Copyright (c) Grafana Labs
+- Used for visualization and dashboards
+
+---
+
+## Patent Notice
+
+This software may be subject to one or more patents. The implementers of this
+software are not aware of any patents that would be infringed by the use of
+this software. However, implementers are advised to conduct their own patent
+search before using this software in a commercial product.
+
+## Trademark Notice
+
+"Geometric Consensus Protocol" is a trademark of the Geometric Consensus Protocol Team.
+Other trademarks are the property of their respective owners.
+
+## Export Control
+
+This software may be subject to export control laws and regulations. Users are
+responsible for ensuring compliance with applicable export control laws in their
+jurisdiction.
+
+## Disclaimer
+
+The software is provided "as is" without warranty of any kind. The authors and
+copyright holders disclaim all warranties, express or implied, including but not
+limited to the warranties of merchantability, fitness for a particular purpose,
+and noninfringement. In no event shall the authors or copyright holders be liable
+for any claim, damages, or other liability, whether in an action of contract,
+tort, or otherwise, arising from, out of, or in connection with the software or
+the use or other dealings in the software.
+
+## Contact
+
+For questions about this license or the software, please contact:
+- Email: legal@geometric-consensus.org
+- Website: https://geometric-consensus.org
+- GitHub: https://github.com/geometric-consensus/geometric-consensus

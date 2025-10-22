@@ -1,0 +1,227 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: geometric-consensus-hpa
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: geometric-consensus
+  minReplicas: 7  # Minimum 7 nodes for Fano plane structure
+  maxReplicas: 21  # Maximum 3x for load balancing
+  metrics:
+  # CPU-based scaling
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  # Memory-based scaling
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  # Custom metrics for consensus load
+  - type: Pods
+    pods:
+      metric:
+        name: consensus_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "100"
+  # Custom metrics for consensus duration
+  - type: Pods
+    pods:
+      metric:
+        name: consensus_duration_seconds
+      target:
+        type: AverageValue
+        averageValue: "0.5"
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # 5 minutes
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+      selectPolicy: Min
+    scaleUp:
+      stabilizationWindowSeconds: 60  # 1 minute
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+      - type: Pods
+        value: 4
+        periodSeconds: 60
+      selectPolicy: Max
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geometric-consensus-data
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: storage
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp2  # AWS EBS GP2, adjust for your environment
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: geometric-consensus
+  labels:
+    name: geometric-consensus
+    app: geometric-consensus
+    version: v1.0.0
+    environment: production
+  annotations:
+    description: "Geometric Consensus Protocol namespace"
+    contact: "consensus-team@example.com"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: geometric-consensus
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: service-account
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: geometric-consensus-role
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: rbac
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "endpoints"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: geometric-consensus-rolebinding
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: rbac
+subjects:
+- kind: ServiceAccount
+  name: geometric-consensus
+  namespace: geometric-consensus
+roleRef:
+  kind: Role
+  name: geometric-consensus-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: geometric-consensus-pdb
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: disruption-budget
+spec:
+  minAvailable: 5  # Ensure at least 5 pods are always available
+  selector:
+    matchLabels:
+      app: geometric-consensus
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: geometric-consensus-backup
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: backup
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: geometric-consensus
+            version: v1.0.0
+            component: backup
+        spec:
+          serviceAccountName: geometric-consensus
+          containers:
+          - name: backup
+            image: busybox:1.35
+            command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Starting backup at $(date)"
+              # Backup consensus state and configuration
+              kubectl get configmap geometric-consensus-config -o yaml > /backup/configmap-$(date +%Y%m%d-%H%M%S).yaml
+              kubectl get secret geometric-consensus-secret -o yaml > /backup/secret-$(date +%Y%m%d-%H%M%S).yaml
+              echo "Backup completed at $(date)"
+            volumeMounts:
+            - name: backup-volume
+              mountPath: /backup
+          volumes:
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: geometric-consensus-backup
+          restartPolicy: OnFailure
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geometric-consensus-backup
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    component: backup-storage
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: gp2

@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: geometric-consensus-service
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: consensus
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  - name: p2p
+    port: 9091
+    targetPort: 9091
+    protocol: TCP
+  selector:
+    app: geometric-consensus
+  sessionAffinity: None
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0  # Allow access from anywhere (configure as needed)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geometric-consensus-headless
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    service-type: headless
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: consensus
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  - name: p2p
+    port: 9091
+    targetPort: 9091
+    protocol: TCP
+  selector:
+    app: geometric-consensus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geometric-consensus-metrics
+  namespace: geometric-consensus
+  labels:
+    app: geometric-consensus
+    version: v1.0.0
+    service-type: metrics
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: geometric-consensus
